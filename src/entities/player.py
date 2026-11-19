@@ -5,9 +5,10 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
         #Posição no mundo
         self.position = pygame.Vector2(x,y)
+        self.facing_direction = pygame.Vector2(0, -1)
 
         #Atributos
-        self.size = 40
+        self.size = 32
         self.speed = 100
 
         #Aparência
@@ -40,6 +41,7 @@ class Player(pygame.sprite.Sprite):
         # Evita velocidade maior na diagonal
         if direction.length() > 0:
             direction = direction.normalize()
+            self.facing_direction = direction
 
         self.position += direction * self.speed * delta_time
 
@@ -47,7 +49,7 @@ class Player(pygame.sprite.Sprite):
         # Converte posição do mundo para posição da tela
         screen_position = self.position - camera
 
-        self.rect = screen_position
+        self.rect.center = screen_position
 
 
         screen.blit(self.image, self.rect)
