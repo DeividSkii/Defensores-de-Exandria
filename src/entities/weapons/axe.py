@@ -1,11 +1,11 @@
 import pygame
-from src.entities.damage_number import DamageNumber
+from src.entities.weapons.weapon import Weapon
 
 
-class Axe:
+class Axe(Weapon):
     def __init__(self, player):
         #Atributos
-        self.player = player
+        super().__init__(player)
 
         self.damage = 10
         self.attack_speed = 2.0
@@ -72,22 +72,25 @@ class Axe:
         area3 = abs((c.x - point.x) * (a.y - point.y) -
                     (a.x - point.x) * (c.y - point.y))
 
-        return area == area1 + area2 + area3
+        return abs(area - (area1 + area2 + area3)) < 0.001
 
-    def check_collision(self, enemies, damage_numbers):
+    def check_collision(self, enemies):
         if not self.is_attacking:
-            return
+            return []
 
         triangle = self.get_attack_position()
 
+        hits = []
+
         for enemy in enemies:
+
             if enemy in self.hit_enemies:
                 continue
 
             if self.point_in_triangle(enemy.position, triangle):
                 enemy.take_damage(self.damage)
-                damage_numbers.append(
-                    DamageNumber(self.damage, enemy.position)
-                )
                 self.hit_enemies.add(enemy)
+                hits.append((enemy ,self.damage))
+
+        return hits
 

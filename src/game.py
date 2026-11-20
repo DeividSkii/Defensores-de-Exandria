@@ -22,7 +22,7 @@ class Game:
 
         # Jogador
         self.player = Player(0, 0)
-        self.axe = Axe(self.player)
+        self.player.weapon = Axe(self.player)
 
         #Inimigos
         self.enemies = pygame.sprite.Group()
@@ -79,8 +79,13 @@ class Game:
             if len(self.enemies) < 50:
                 self.spawn_enemy()
 
-        self.axe.update(delta_time)
-        self.axe.check_collision(self.enemies, self.damage_numbers)
+        self.player.weapon.update(delta_time)
+        hits = self.player.weapon.check_collision(self.enemies)
+
+        for enemy, damage in hits:
+            self.damage_numbers.append(
+                DamageNumber(damage, enemy.position)
+            )
 
         for damage_number in self.damage_numbers:
             damage_number.update(delta_time)
@@ -126,7 +131,7 @@ class Game:
         for enemy in self.enemies:
             enemy.draw(self.screen, self.camera.offset)
 
-        self.axe.draw(self.screen, self.camera.offset)
+        self.player.weapon.draw(self.screen, self.camera.offset)
 
         for damage_number in self.damage_numbers:
             damage_number.draw(self.screen, self.camera.offset)

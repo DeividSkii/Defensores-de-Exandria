@@ -10,6 +10,7 @@ class Player(pygame.sprite.Sprite):
         #Atributos
         self.size = 32
         self.speed = 100
+        self.weapon = None
 
         #Aparência
         self.color = (255, 255,0)
